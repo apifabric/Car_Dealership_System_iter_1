@@ -1,0 +1,274 @@
+{
+    "models": [
+        {
+            "classname": "Car",
+            "code": "class Car(Base):\n    __tablename__ = 'car'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    model = Column(String)\n    brand_id = Column(Integer, ForeignKey('brand.id'))\n    price = Column(Integer)\n    year_of_manufacture = Column(Integer)",
+            "description": "Represents a car in the dealership, including the brand it belongs to and its price.",
+            "name": "Car"
+        },
+        {
+            "classname": "Brand",
+            "code": "class Brand(Base):\n    __tablename__ = 'brand'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)",
+            "description": "Represents a car brand with a unique identifier.",
+            "name": "Brand"
+        },
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):\n    __tablename__ = 'customer'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    first_name = Column(String)\n    last_name = Column(String)\n    email = Column(String)",
+            "description": "Represents a customer with contact details.",
+            "name": "Customer"
+        },
+        {
+            "classname": "Sale",
+            "code": "class Sale(Base):\n    __tablename__ = 'sale'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    car_id = Column(Integer, ForeignKey('car.id'))\n    customer_id = Column(Integer, ForeignKey('customer.id'))\n    sale_date = Column(DateTime)\n    sale_price = Column(Integer)",
+            "description": "Details the sale transactions involving cars and customers.",
+            "name": "Sale"
+        },
+        {
+            "classname": "Dealer",
+            "code": "class Dealer(Base):\n    __tablename__ = 'dealer'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)\n    location = Column(String)",
+            "description": "Represents a dealership location along with its name.",
+            "name": "Dealer"
+        },
+        {
+            "classname": "Inventory",
+            "code": "class Inventory(Base):\n    __tablename__ = 'inventory'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    dealer_id = Column(Integer, ForeignKey('dealer.id'))\n    car_id = Column(Integer, ForeignKey('car.id'))\n    quantity = Column(Integer)",
+            "description": "Tracks the number of a specific car model available at each dealer.",
+            "name": "Inventory"
+        },
+        {
+            "classname": "Employee",
+            "code": "class Employee(Base):\n    __tablename__ = 'employee'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    dealer_id = Column(Integer, ForeignKey('dealer.id'))\n    first_name = Column(String)\n    last_name = Column(String)\n    position = Column(String)",
+            "description": "Contains the details of employees working at various dealerships.",
+            "name": "Employee"
+        },
+        {
+            "classname": "TestDrive",
+            "code": "class TestDrive(Base):\n    __tablename__ = 'test_drive'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    customer_id = Column(Integer, ForeignKey('customer.id'))\n    car_id = Column(Integer, ForeignKey('car.id'))\n    date = Column(DateTime)",
+            "description": "Records customer requests and actual test drive events with dates.",
+            "name": "TestDrive"
+        },
+        {
+            "classname": "Promotion",
+            "code": "class Promotion(Base):\n    __tablename__ = 'promotion'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    car_id = Column(Integer, ForeignKey('car.id'))\n    description = Column(String)\n    discount_percentage = Column(Integer)",
+            "description": "Lists active promotions on specific cars, including discounts.",
+            "name": "Promotion"
+        },
+        {
+            "classname": "Maintenance",
+            "code": "class Maintenance(Base):\n    __tablename__ = 'maintenance'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    car_id = Column(Integer, ForeignKey('car.id'))\n    last_serviced_date = Column(DateTime)\n    service_details = Column(String)",
+            "description": "Stores information about maintenance and service history of cars.",
+            "name": "Maintenance"
+        },
+        {
+            "classname": "CarFeature",
+            "code": "class CarFeature(Base):\n    __tablename__ = 'car_feature'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    feature_name = Column(String)",
+            "description": "Defines the features that can be associated with different cars.",
+            "name": "CarFeature"
+        },
+        {
+            "classname": "CarFeatureAssignment",
+            "code": "class CarFeatureAssignment(Base):\n    __tablename__ = 'car_feature_assignment'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    car_id = Column(Integer, ForeignKey('car.id'))\n    feature_id = Column(Integer, ForeignKey('car_feature.id'))",
+            "description": "Link table between cars and features to assign features to specific cars.",
+            "name": "CarFeatureAssignment"
+        }
+    ],
+    "rules": [],
+    "test_data": "# Test Data for Car Model\ncar1 = Car(id=1, model=\"Model S\", brand_id=1, price=80000, year_of_manufacture=2021)\ncar2 = Car(id=2, model=\"Model 3\", brand_id=1, price=40000, year_of_manufacture=2020)\ncar3 = Car(id=3, model=\"Mustang\", brand_id=2, price=55000, year_of_manufacture=2022)\ncar4 = Car(id=4, model=\"Civic\", brand_id=3, price=25000, year_of_manufacture=2019)\n\n# Test Data for Brand Model\nbrand1 = Brand(id=1, name=\"Tesla\")\nbrand2 = Brand(id=2, name=\"Ford\")\nbrand3 = Brand(id=3, name=\"Honda\")\nbrand4 = Brand(id=4, name=\"Toyota\")\n\n# Test Data for Customer Model\ncustomer1 = Customer(id=1, first_name=\"Alice\", last_name=\"Smith\", email=\"alice@example.com\")\ncustomer2 = Customer(id=2, first_name=\"Bob\", last_name=\"Johnson\", email=\"bob@example.com\")\ncustomer3 = Customer(id=3, first_name=\"Charlie\", last_name=\"Brown\", email=\"charlie@example.com\")\ncustomer4 = Customer(id=4, first_name=\"Diana\", last_name=\"Evans\", email=\"diana@example.com\")\n\n# Test Data for Sale Model\nsale1 = Sale(id=1, car_id=1, customer_id=1, sale_date=date(2022, 5, 20), sale_price=80000)\nsale2 = Sale(id=2, car_id=2, customer_id=2, sale_date=date(2022, 7, 15), sale_price=38000)\nsale3 = Sale(id=3, car_id=3, customer_id=3, sale_date=date(2022, 8, 30), sale_price=55000)\nsale4 = Sale(id=4, car_id=4, customer_id=4, sale_date=date(2022, 12, 5), sale_price=24000)\n\n# Test Data for Dealer Model\ndealer1 = Dealer(id=1, name=\"Auto World\", location=\"New York\")\ndealer2 = Dealer(id=2, name=\"Speed Motors\", location=\"Los Angeles\")\ndealer3 = Dealer(id=3, name=\"Fast Drive\", location=\"Chicago\")\ndealer4 = Dealer(id=4, name=\"Luxury Cars\", location=\"Houston\")\n\n# Test Data for Inventory Model\ninventory1 = Inventory(id=1, dealer_id=1, car_id=1, quantity=5)\ninventory2 = Inventory(id=2, dealer_id=2, car_id=2, quantity=10)\ninventory3 = Inventory(id=3, dealer_id=3, car_id=3, quantity=3)\ninventory4 = Inventory(id=4, dealer_id=4, car_id=4, quantity=7)\n\n# Test Data for Employee Model\nemployee1 = Employee(id=1, dealer_id=1, first_name=\"Paul\", last_name=\"Davis\", position=\"Sales Manager\")\nemployee2 = Employee(id=2, dealer_id=2, first_name=\"Laura\", last_name=\"Miller\", position=\"Technician\")\nemployee3 = Employee(id=3, dealer_id=3, first_name=\"Kevin\", last_name=\"Cook\", position=\"Accountant\")\nemployee4 = Employee(id=4, dealer_id=4, first_name=\"Sarah\", last_name=\"Johnson\", position=\"Receptionist\")\n\n# Test Data for Test Drive Model\ntest_drive1 = TestDrive(id=1, customer_id=1, car_id=1, date=date(2022, 4, 10))\ntest_drive2 = TestDrive(id=2, customer_id=2, car_id=2, date=date(2022, 6, 12))\ntest_drive3 = TestDrive(id=3, customer_id=3, car_id=3, date=date(2022, 7, 18))\ntest_drive4 = TestDrive(id=4, customer_id=4, car_id=4, date=date(2022, 9, 25))\n\n# Test Data for Promotion Model\npromotion1 = Promotion(id=1, car_id=1, description=\"Winter Sale\", discount_percentage=10)\npromotion2 = Promotion(id=2, car_id=2, description=\"Summer Clearance\", discount_percentage=15)\npromotion3 = Promotion(id=3, car_id=3, description=\"New Year Offer\", discount_percentage=5)\npromotion4 = Promotion(id=4, car_id=4, description=\"Anniversary Special\", discount_percentage=20)\n\n# Test Data for Maintenance Model\nmaintenance1 = Maintenance(id=1, car_id=1, last_serviced_date=date(2022, 3, 10), service_details=\"Oil Change\")\nmaintenance2 = Maintenance(id=2, car_id=2, last_serviced_date=date(2022, 5, 5), service_details=\"Brake Check\")\nmaintenance3 = Maintenance(id=3, car_id=3, last_serviced_date=date(2022, 6, 22), service_details=\"Tire Rotation\")\nmaintenance4 = Maintenance(id=4, car_id=4, last_serviced_date=date(2022, 8, 14), service_details=\"Battery Replacement\")\n\n# Test Data for Car Feature Model\ncar_feature1 = CarFeature(id=1, feature_name=\"Sunroof\")\ncar_feature2 = CarFeature(id=2, feature_name=\"Leather Seats\")\ncar_feature3 = CarFeature(id=3, feature_name=\"Bluetooth\")\ncar_feature4 = CarFeature(id=4, feature_name=\"Backup Camera\")\n\n# Test Data for Car Feature Assignment Model\ncar_feature_assignment1 = CarFeatureAssignment(id=1, car_id=1, feature_id=1)\ncar_feature_assignment2 = CarFeatureAssignment(id=2, car_id=2, feature_id=2)\ncar_feature_assignment3 = CarFeatureAssignment(id=3, car_id=3, feature_id=3)\ncar_feature_assignment4 = CarFeatureAssignment(id=4, car_id=4, feature_id=4)",
+    "test_data_rows": [
+        {
+            "test_data_row_variable": "car1",
+            "code": "car1 = Car(id=1, model=\"Model S\", brand_id=1, price=80000, year_of_manufacture=2021)"
+        },
+        {
+            "test_data_row_variable": "car2",
+            "code": "car2 = Car(id=2, model=\"Model 3\", brand_id=1, price=40000, year_of_manufacture=2020)"
+        },
+        {
+            "test_data_row_variable": "car3",
+            "code": "car3 = Car(id=3, model=\"Mustang\", brand_id=2, price=55000, year_of_manufacture=2022)"
+        },
+        {
+            "test_data_row_variable": "car4",
+            "code": "car4 = Car(id=4, model=\"Civic\", brand_id=3, price=25000, year_of_manufacture=2019)"
+        },
+        {
+            "test_data_row_variable": "brand1",
+            "code": "brand1 = Brand(id=1, name=\"Tesla\")"
+        },
+        {
+            "test_data_row_variable": "brand2",
+            "code": "brand2 = Brand(id=2, name=\"Ford\")"
+        },
+        {
+            "test_data_row_variable": "brand3",
+            "code": "brand3 = Brand(id=3, name=\"Honda\")"
+        },
+        {
+            "test_data_row_variable": "brand4",
+            "code": "brand4 = Brand(id=4, name=\"Toyota\")"
+        },
+        {
+            "test_data_row_variable": "customer1",
+            "code": "customer1 = Customer(id=1, first_name=\"Alice\", last_name=\"Smith\", email=\"alice@example.com\")"
+        },
+        {
+            "test_data_row_variable": "customer2",
+            "code": "customer2 = Customer(id=2, first_name=\"Bob\", last_name=\"Johnson\", email=\"bob@example.com\")"
+        },
+        {
+            "test_data_row_variable": "customer3",
+            "code": "customer3 = Customer(id=3, first_name=\"Charlie\", last_name=\"Brown\", email=\"charlie@example.com\")"
+        },
+        {
+            "test_data_row_variable": "customer4",
+            "code": "customer4 = Customer(id=4, first_name=\"Diana\", last_name=\"Evans\", email=\"diana@example.com\")"
+        },
+        {
+            "test_data_row_variable": "sale1",
+            "code": "sale1 = Sale(id=1, car_id=1, customer_id=1, sale_date=date(2022, 5, 20), sale_price=80000)"
+        },
+        {
+            "test_data_row_variable": "sale2",
+            "code": "sale2 = Sale(id=2, car_id=2, customer_id=2, sale_date=date(2022, 7, 15), sale_price=38000)"
+        },
+        {
+            "test_data_row_variable": "sale3",
+            "code": "sale3 = Sale(id=3, car_id=3, customer_id=3, sale_date=date(2022, 8, 30), sale_price=55000)"
+        },
+        {
+            "test_data_row_variable": "sale4",
+            "code": "sale4 = Sale(id=4, car_id=4, customer_id=4, sale_date=date(2022, 12, 5), sale_price=24000)"
+        },
+        {
+            "test_data_row_variable": "dealer1",
+            "code": "dealer1 = Dealer(id=1, name=\"Auto World\", location=\"New York\")"
+        },
+        {
+            "test_data_row_variable": "dealer2",
+            "code": "dealer2 = Dealer(id=2, name=\"Speed Motors\", location=\"Los Angeles\")"
+        },
+        {
+            "test_data_row_variable": "dealer3",
+            "code": "dealer3 = Dealer(id=3, name=\"Fast Drive\", location=\"Chicago\")"
+        },
+        {
+            "test_data_row_variable": "dealer4",
+            "code": "dealer4 = Dealer(id=4, name=\"Luxury Cars\", location=\"Houston\")"
+        },
+        {
+            "test_data_row_variable": "inventory1",
+            "code": "inventory1 = Inventory(id=1, dealer_id=1, car_id=1, quantity=5)"
+        },
+        {
+            "test_data_row_variable": "inventory2",
+            "code": "inventory2 = Inventory(id=2, dealer_id=2, car_id=2, quantity=10)"
+        },
+        {
+            "test_data_row_variable": "inventory3",
+            "code": "inventory3 = Inventory(id=3, dealer_id=3, car_id=3, quantity=3)"
+        },
+        {
+            "test_data_row_variable": "inventory4",
+            "code": "inventory4 = Inventory(id=4, dealer_id=4, car_id=4, quantity=7)"
+        },
+        {
+            "test_data_row_variable": "employee1",
+            "code": "employee1 = Employee(id=1, dealer_id=1, first_name=\"Paul\", last_name=\"Davis\", position=\"Sales Manager\")"
+        },
+        {
+            "test_data_row_variable": "employee2",
+            "code": "employee2 = Employee(id=2, dealer_id=2, first_name=\"Laura\", last_name=\"Miller\", position=\"Technician\")"
+        },
+        {
+            "test_data_row_variable": "employee3",
+            "code": "employee3 = Employee(id=3, dealer_id=3, first_name=\"Kevin\", last_name=\"Cook\", position=\"Accountant\")"
+        },
+        {
+            "test_data_row_variable": "employee4",
+            "code": "employee4 = Employee(id=4, dealer_id=4, first_name=\"Sarah\", last_name=\"Johnson\", position=\"Receptionist\")"
+        },
+        {
+            "test_data_row_variable": "test_drive1",
+            "code": "test_drive1 = TestDrive(id=1, customer_id=1, car_id=1, date=date(2022, 4, 10))"
+        },
+        {
+            "test_data_row_variable": "test_drive2",
+            "code": "test_drive2 = TestDrive(id=2, customer_id=2, car_id=2, date=date(2022, 6, 12))"
+        },
+        {
+            "test_data_row_variable": "test_drive3",
+            "code": "test_drive3 = TestDrive(id=3, customer_id=3, car_id=3, date=date(2022, 7, 18))"
+        },
+        {
+            "test_data_row_variable": "test_drive4",
+            "code": "test_drive4 = TestDrive(id=4, customer_id=4, car_id=4, date=date(2022, 9, 25))"
+        },
+        {
+            "test_data_row_variable": "promotion1",
+            "code": "promotion1 = Promotion(id=1, car_id=1, description=\"Winter Sale\", discount_percentage=10)"
+        },
+        {
+            "test_data_row_variable": "promotion2",
+            "code": "promotion2 = Promotion(id=2, car_id=2, description=\"Summer Clearance\", discount_percentage=15)"
+        },
+        {
+            "test_data_row_variable": "promotion3",
+            "code": "promotion3 = Promotion(id=3, car_id=3, description=\"New Year Offer\", discount_percentage=5)"
+        },
+        {
+            "test_data_row_variable": "promotion4",
+            "code": "promotion4 = Promotion(id=4, car_id=4, description=\"Anniversary Special\", discount_percentage=20)"
+        },
+        {
+            "test_data_row_variable": "maintenance1",
+            "code": "maintenance1 = Maintenance(id=1, car_id=1, last_serviced_date=date(2022, 3, 10), service_details=\"Oil Change\")"
+        },
+        {
+            "test_data_row_variable": "maintenance2",
+            "code": "maintenance2 = Maintenance(id=2, car_id=2, last_serviced_date=date(2022, 5, 5), service_details=\"Brake Check\")"
+        },
+        {
+            "test_data_row_variable": "maintenance3",
+            "code": "maintenance3 = Maintenance(id=3, car_id=3, last_serviced_date=date(2022, 6, 22), service_details=\"Tire Rotation\")"
+        },
+        {
+            "test_data_row_variable": "maintenance4",
+            "code": "maintenance4 = Maintenance(id=4, car_id=4, last_serviced_date=date(2022, 8, 14), service_details=\"Battery Replacement\")"
+        },
+        {
+            "test_data_row_variable": "car_feature1",
+            "code": "car_feature1 = CarFeature(id=1, feature_name=\"Sunroof\")"
+        },
+        {
+            "test_data_row_variable": "car_feature2",
+            "code": "car_feature2 = CarFeature(id=2, feature_name=\"Leather Seats\")"
+        },
+        {
+            "test_data_row_variable": "car_feature3",
+            "code": "car_feature3 = CarFeature(id=3, feature_name=\"Bluetooth\")"
+        },
+        {
+            "test_data_row_variable": "car_feature4",
+            "code": "car_feature4 = CarFeature(id=4, feature_name=\"Backup Camera\")"
+        },
+        {
+            "test_data_row_variable": "car_feature_assignment1",
+            "code": "car_feature_assignment1 = CarFeatureAssignment(id=1, car_id=1, feature_id=1)"
+        },
+        {
+            "test_data_row_variable": "car_feature_assignment2",
+            "code": "car_feature_assignment2 = CarFeatureAssignment(id=2, car_id=2, feature_id=2)"
+        },
+        {
+            "test_data_row_variable": "car_feature_assignment3",
+            "code": "car_feature_assignment3 = CarFeatureAssignment(id=3, car_id=3, feature_id=3)"
+        },
+        {
+            "test_data_row_variable": "car_feature_assignment4",
+            "code": "car_feature_assignment4 = CarFeatureAssignment(id=4, car_id=4, feature_id=4)"
+        }
+    ],
+    "test_data_sqlite": "INSERT INTO car (id, model, brand_id, price, year_of_manufacture) VALUES (1, \"Model S\", 1, 80000, 2021);\nINSERT INTO car (id, model, brand_id, price, year_of_manufacture) VALUES (2, \"Model 3\", 1, 40000, 2020);\nINSERT INTO car (id, model, brand_id, price, year_of_manufacture) VALUES (3, \"Mustang\", 2, 55000, 2022);\nINSERT INTO car (id, model, brand_id, price, year_of_manufacture) VALUES (4, \"Civic\", 3, 25000, 2019);\n\nINSERT INTO brand (id, name) VALUES (1, \"Tesla\");\nINSERT INTO brand (id, name) VALUES (2, \"Ford\");\nINSERT INTO brand (id, name) VALUES (3, \"Honda\");\nINSERT INTO brand (id, name) VALUES (4, \"Toyota\");\n\nINSERT INTO customer (id, first_name, last_name, email) VALUES (1, \"Alice\", \"Smith\", \"alice@example.com\");\nINSERT INTO customer (id, first_name, last_name, email) VALUES (2, \"Bob\", \"Johnson\", \"bob@example.com\");\nINSERT INTO customer (id, first_name, last_name, email) VALUES (3, \"Charlie\", \"Brown\", \"charlie@example.com\");\nINSERT INTO customer (id, first_name, last_name, email) VALUES (4, \"Diana\", \"Evans\", \"diana@example.com\");\n\nINSERT INTO sale (id, car_id, customer_id, sale_date, sale_price) VALUES (1, 1, 1, date(2022, 5, 20), 80000);\nINSERT INTO sale (id, car_id, customer_id, sale_date, sale_price) VALUES (2, 2, 2, date(2022, 7, 15), 38000);\nINSERT INTO sale (id, car_id, customer_id, sale_date, sale_price) VALUES (3, 3, 3, date(2022, 8, 30), 55000);\nINSERT INTO sale (id, car_id, customer_id, sale_date, sale_price) VALUES (4, 4, 4, date(2022, 12, 5), 24000);\n\nINSERT INTO dealer (id, name, location) VALUES (1, \"Auto World\", \"New York\");\nINSERT INTO dealer (id, name, location) VALUES (2, \"Speed Motors\", \"Los Angeles\");\nINSERT INTO dealer (id, name, location) VALUES (3, \"Fast Drive\", \"Chicago\");\nINSERT INTO dealer (id, name, location) VALUES (4, \"Luxury Cars\", \"Houston\");\n\nINSERT INTO inventory (id, dealer_id, car_id, quantity) VALUES (1, 1, 1, 5);\nINSERT INTO inventory (id, dealer_id, car_id, quantity) VALUES (2, 2, 2, 10);\nINSERT INTO inventory (id, dealer_id, car_id, quantity) VALUES (3, 3, 3, 3);\nINSERT INTO inventory (id, dealer_id, car_id, quantity) VALUES (4, 4, 4, 7);\n\nINSERT INTO employee (id, dealer_id, first_name, last_name, position) VALUES (1, 1, \"Paul\", \"Davis\", \"Sales Manager\");\nINSERT INTO employee (id, dealer_id, first_name, last_name, position) VALUES (2, 2, \"Laura\", \"Miller\", \"Technician\");\nINSERT INTO employee (id, dealer_id, first_name, last_name, position) VALUES (3, 3, \"Kevin\", \"Cook\", \"Accountant\");\nINSERT INTO employee (id, dealer_id, first_name, last_name, position) VALUES (4, 4, \"Sarah\", \"Johnson\", \"Receptionist\");\n\nINSERT INTO test_drive (id, customer_id, car_id, date) VALUES (1, 1, 1, date(2022, 4, 10));\nINSERT INTO test_drive (id, customer_id, car_id, date) VALUES (2, 2, 2, date(2022, 6, 12));\nINSERT INTO test_drive (id, customer_id, car_id, date) VALUES (3, 3, 3, date(2022, 7, 18));\nINSERT INTO test_drive (id, customer_id, car_id, date) VALUES (4, 4, 4, date(2022, 9, 25));\n\nINSERT INTO promotion (id, car_id, description, discount_percentage) VALUES (1, 1, \"Winter Sale\", 10);\nINSERT INTO promotion (id, car_id, description, discount_percentage) VALUES (2, 2, \"Summer Clearance\", 15);\nINSERT INTO promotion (id, car_id, description, discount_percentage) VALUES (3, 3, \"New Year Offer\", 5);\nINSERT INTO promotion (id, car_id, description, discount_percentage) VALUES (4, 4, \"Anniversary Special\", 20);\n\nINSERT INTO maintenance (id, car_id, last_serviced_date, service_details) VALUES (1, 1, date(2022, 3, 10), \"Oil Change\");\nINSERT INTO maintenance (id, car_id, last_serviced_date, service_details) VALUES (2, 2, date(2022, 5, 5), \"Brake Check\");\nINSERT INTO maintenance (id, car_id, last_serviced_date, service_details) VALUES (3, 3, date(2022, 6, 22), \"Tire Rotation\");\nINSERT INTO maintenance (id, car_id, last_serviced_date, service_details) VALUES (4, 4, date(2022, 8, 14), \"Battery Replacement\");\n\nINSERT INTO car_feature (id, feature_name) VALUES (1, \"Sunroof\");\nINSERT INTO car_feature (id, feature_name) VALUES (2, \"Leather Seats\");\nINSERT INTO car_feature (id, feature_name) VALUES (3, \"Bluetooth\");\nINSERT INTO car_feature (id, feature_name) VALUES (4, \"Backup Camera\");\n\nINSERT INTO car_feature_assignment (id, car_id, feature_id) VALUES (1, 1, 1);\nINSERT INTO car_feature_assignment (id, car_id, feature_id) VALUES (2, 2, 2);\nINSERT INTO car_feature_assignment (id, car_id, feature_id) VALUES (3, 3, 3);\nINSERT INTO car_feature_assignment (id, car_id, feature_id) VALUES (4, 4, 4);",
+    "name": "Car Dealership System"
+}

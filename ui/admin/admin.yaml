@@ -1,0 +1,360 @@
+about:
+  date: December 31, 2024 09:42:59
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 13
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Brand:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: id
+    description: Represents a car brand with a unique identifier.
+    info_list: Represents a car brand with a unique identifier.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - brand_id
+      name: CarList
+      resource: Car
+    type: Brand
+    user_key: name
+  Car:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: brand_id
+    - name: model
+    - name: price
+    - name: year_of_manufacture
+    - name: test_drive_count
+    description: Represents a car in the dealership, including the brand it belongs
+      to and its price. Tracks the number of test drives requested for this car.
+    info_list: Represents a car in the dealership, including the brand it belongs
+      to and its price. Tracks the number of test drives requested for this car.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - car_id
+      name: CarFeatureAssignmentList
+      resource: CarFeatureAssignment
+    - direction: tomany
+      fks:
+      - car_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - car_id
+      name: MaintenanceList
+      resource: Maintenance
+    - direction: tomany
+      fks:
+      - car_id
+      name: PromotionList
+      resource: Promotion
+    - direction: tomany
+      fks:
+      - car_id
+      name: SaleList
+      resource: Sale
+    - direction: tomany
+      fks:
+      - car_id
+      name: TestDriveList
+      resource: TestDrive
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    type: Car
+    user_key: id
+  CarFeature:
+    attributes:
+    - label: ' feature_name*'
+      name: feature_name
+      search: true
+      sort: true
+    - name: id
+    description: Defines the features that can be associated with different cars.
+    info_list: Defines the features that can be associated with different cars.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - feature_id
+      name: CarFeatureAssignmentList
+      resource: CarFeatureAssignment
+    type: CarFeature
+    user_key: feature_name
+  CarFeatureAssignment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: car_id
+    - name: feature_id
+    description: Link table between cars and features to assign features to specific
+      cars.
+    info_list: Link table between cars and features to assign features to specific
+      cars.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    - direction: toone
+      fks:
+      - feature_id
+      name: feature
+      resource: CarFeature
+    type: CarFeatureAssignment
+    user_key: id
+  Customer:
+    attributes:
+    - label: ' first_name*'
+      name: first_name
+      search: true
+      sort: true
+    - name: last_name
+    - name: email
+    - name: test_drive_count
+    - name: id
+    description: Represents a customer with contact details. Tracks the number of
+      test drives requested by the customer.
+    info_list: Represents a customer with contact details. Tracks the number of test
+      drives requested by the customer.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: SaleList
+      resource: Sale
+    - direction: tomany
+      fks:
+      - customer_id
+      name: TestDriveList
+      resource: TestDrive
+    type: Customer
+    user_key: first_name
+  Dealer:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: location
+    - name: inventory_count
+    - name: id
+    description: Represents a dealership location along with its name. Tracks the
+      total inventory count for the dealer.
+    info_list: Represents a dealership location along with its name. Tracks the total
+      inventory count for the dealer.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - dealer_id
+      name: EmployeeList
+      resource: Employee
+    - direction: tomany
+      fks:
+      - dealer_id
+      name: InventoryList
+      resource: Inventory
+    type: Dealer
+    user_key: name
+  Employee:
+    attributes:
+    - label: ' first_name*'
+      name: first_name
+      search: true
+      sort: true
+    - name: dealer_id
+    - name: last_name
+    - name: position
+    - name: service_count
+    - name: id
+    description: Contains the details of employees working at various dealerships.
+      Tracks the number of services conducted by an employee.
+    info_list: Contains the details of employees working at various dealerships. Tracks
+      the number of services conducted by an employee.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - employee_id
+      name: MaintenanceList
+      resource: Maintenance
+    - direction: toone
+      fks:
+      - dealer_id
+      name: dealer
+      resource: Dealer
+    type: Employee
+    user_key: first_name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: car_id
+    - name: dealer_id
+    - name: quantity
+    description: Tracks the number of a specific car model available at each dealer.
+    info_list: Tracks the number of a specific car model available at each dealer.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    - direction: toone
+      fks:
+      - dealer_id
+      name: dealer
+      resource: Dealer
+    type: Inventory
+    user_key: id
+  Maintenance:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: car_id
+    - name: employee_id
+    - name: last_serviced_date
+      type: DATETIME
+    - name: service_details
+    description: Stores information about maintenance and service history of cars.
+      Associates maintenance tasks with employees.
+    info_list: Stores information about maintenance and service history of cars. Associates
+      maintenance tasks with employees.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    - direction: toone
+      fks:
+      - employee_id
+      name: employee
+      resource: Employee
+    type: Maintenance
+    user_key: id
+  Promotion:
+    attributes:
+    - label: ' description*'
+      name: description
+      search: true
+      sort: true
+    - name: car_id
+    - name: discount_percentage
+    - name: applied_count
+    - name: id
+    description: Lists active promotions on specific cars, including discounts. Tracks
+      how many sales have utilized the promotion.
+    info_list: Lists active promotions on specific cars, including discounts. Tracks
+      how many sales have utilized the promotion.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    type: Promotion
+    user_key: description
+  Sale:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: car_id
+    - name: customer_id
+    - name: sale_date
+      type: DATETIME
+    - name: sale_price
+    description: Details the sale transactions involving cars and customers.
+    info_list: Details the sale transactions involving cars and customers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Sale
+    user_key: id
+  TestDrive:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: car_id
+    - name: customer_id
+    - name: date
+      type: DATETIME
+    description: Records customer requests and actual test drive events with dates.
+    info_list: Records customer requests and actual test drive events with dates.
+    tab_groups:
+    - direction: toone
+      fks:
+      - car_id
+      name: car
+      resource: Car
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: TestDrive
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

@@ -1,0 +1,38 @@
+[
+    {
+        "code": "Rule.count(derive=Car.test_drive_count, as_count_of=TestDrive, where=lambda row: row.car_id == Car.id)",
+        "description": "Count total cars that have been requested for a test drive",
+        "name": "Count Cars in Test Drive",
+        "use_case": "Inventory of cars requested by customers for a test drive."
+    },
+    {
+        "code": "Rule.count(derive=Customer.test_drive_count, as_count_of=TestDrive)",
+        "description": "Count how many test drives a customer has requested",
+        "name": "Track Test Drive Requests",
+        "use_case": "Find customers' engagement with potential car purchases through test drives."
+    },
+    {
+        "code": "Rule.count(derive=Employee.service_count, as_count_of=Maintenance, where=lambda row: row.employee_id == Employee.id)",
+        "description": "Count the number of services conducted by an employee",
+        "name": "Employee Service Count",
+        "use_case": "Keeps track of employee productivity regarding car maintenance."
+    },
+    {
+        "code": "Rule.count(derive=Promotion.applied_count, as_count_of=Sale, where=lambda row: row.car_id == Promotion.car_id)",
+        "description": "Count how many promotions have been applied to a car",
+        "name": "Track Promotions Applied",
+        "use_case": "Allow for awareness of car promotions and their usage."
+    },
+    {
+        "code": "Rule.constraint(validate=Dealer, as_condition=lambda row: row.inventory_count <= 50, error_msg='Dealer inventory exceeds limit')",
+        "description": "Ensure that no dealer has more than a fixed limit of cars in inventory",
+        "name": "Inventory Validity",
+        "use_case": "Enforce inventory limits for dealers to manage stock efficiently."
+    },
+    {
+        "code": "Rule.constraint(validate=Employee, as_condition=lambda row: row.service_count <= 10, error_msg='Employee has exceeded the daily service limit')",
+        "description": "Ensure that employees cannot service more than 10 cars in a day",
+        "name": "Employee Limit on Services",
+        "use_case": "Control the workload of mechanics and service staff in dealers."
+    }
+]

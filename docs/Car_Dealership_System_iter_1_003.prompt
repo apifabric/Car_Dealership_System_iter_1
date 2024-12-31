@@ -1,0 +1,8 @@
+Update the prior response - be sure not to lose classes and test data already created.
+
+Count total cars that have been requested for a test drive
+Count how many test drives a customer has requested
+Count the number of services conducted by an employee
+Count how many promotions have been applied to a car
+Ensure that no dealer has more than a fixed limit of cars in inventory
+Ensure that employees cannot service more than 10 cars in a day

@@ -1,0 +1,124 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Brand: Represents a car brand with a unique identifier.
+Car: Represents a car in the dealership, including the brand it belongs to and its price. Tracks the number of test drives requested for this car.
+CarFeature: Defines the features that can be associated with different cars.
+CarFeatureAssignment: Link table between cars and features to assign features to specific cars.
+Customer: Represents a customer with contact details. Tracks the number of test drives requested by the customer.
+Dealer: Represents a dealership location along with its name. Tracks the total inventory count for the dealer.
+Employee: Contains the details of employees working at various dealerships. Tracks the number of services conducted by an employee.
+Inventory: Tracks the number of a specific car model available at each dealer.
+Maintenance: Stores information about maintenance and service history of cars. Associates maintenance tasks with employees.
+Promotion: Lists active promotions on specific cars, including discounts. Tracks how many sales have utilized the promotion.
+Sale: Details the sale transactions involving cars and customers.
+TestDrive: Records customer requests and actual test drive events with dates.
+'''
+}
+
+Table Brand {
+    id INTEGER [primary key]
+    name VARCHAR 
+    }
+
+Table Car {
+    id INTEGER [primary key]
+    model VARCHAR 
+    brand_id INTEGER 
+    price INTEGER 
+    year_of_manufacture INTEGER 
+    test_drive_count INTEGER 
+    }
+
+Table CarFeature {
+    id INTEGER [primary key]
+    feature_name VARCHAR 
+    }
+
+Table CarFeatureAssignment {
+    id INTEGER [primary key]
+    car_id INTEGER 
+    feature_id INTEGER 
+    }
+
+Table Customer {
+    id INTEGER [primary key]
+    first_name VARCHAR 
+    last_name VARCHAR 
+    email VARCHAR 
+    test_drive_count INTEGER 
+    }
+
+Table Dealer {
+    id INTEGER [primary key]
+    name VARCHAR 
+    location VARCHAR 
+    inventory_count INTEGER 
+    }
+
+Table Employee {
+    id INTEGER [primary key]
+    dealer_id INTEGER 
+    first_name VARCHAR 
+    last_name VARCHAR 
+    position VARCHAR 
+    service_count INTEGER 
+    }
+
+Table Inventory {
+    id INTEGER [primary key]
+    dealer_id INTEGER 
+    car_id INTEGER 
+    quantity INTEGER 
+    }
+
+Table Maintenance {
+    id INTEGER [primary key]
+    car_id INTEGER 
+    employee_id INTEGER 
+    last_serviced_date DATETIME 
+    service_details VARCHAR 
+    }
+
+Table Promotion {
+    id INTEGER [primary key]
+    car_id INTEGER 
+    description VARCHAR 
+    discount_percentage INTEGER 
+    applied_count INTEGER 
+    }
+
+Table Sale {
+    id INTEGER [primary key]
+    car_id INTEGER 
+    customer_id INTEGER 
+    sale_date DATETIME 
+    sale_price INTEGER 
+    }
+
+Table TestDrive {
+    id INTEGER [primary key]
+    customer_id INTEGER 
+    car_id INTEGER 
+    date DATETIME 
+    }
+
+
+
+// Relationships
+    Ref: Car.(brand_id) < Brand.(id)
+    Ref: CarFeatureAssignment.(car_id) < Car.(id)
+    Ref: CarFeatureAssignment.(feature_id) < CarFeature.(id)
+    Ref: Employee.(dealer_id) < Dealer.(id)
+    Ref: Inventory.(car_id) < Car.(id)
+    Ref: Inventory.(dealer_id) < Dealer.(id)
+    Ref: Maintenance.(car_id) < Car.(id)
+    Ref: Maintenance.(employee_id) < Employee.(id)
+    Ref: Promotion.(car_id) < Car.(id)
+    Ref: Sale.(car_id) < Car.(id)
+    Ref: Sale.(customer_id) < Customer.(id)
+    Ref: TestDrive.(car_id) < Car.(id)
+    Ref: TestDrive.(customer_id) < Customer.(id)

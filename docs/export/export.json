@@ -1,0 +1,114 @@
+{
+    "rules": [
+        {
+            "name": "Count Cars in Test Drive",
+            "description": "Count total cars that have been requested for a test drive",
+            "use_case": "Inventory of cars requested by customers for a test drive.",
+            "code": "Rule.count(derive=Car.test_drive_count, as_count_of=TestDrive, where=lambda row: row.car_id == Car.id)",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGQDKMCP0P7BDJESSZCD"
+        },
+        {
+            "name": "Track Test Drive Requests",
+            "description": "Count how many test drives a customer has requested",
+            "use_case": "Find customers' engagement with potential car purchases through test drives.",
+            "code": "Rule.count(derive=Customer.test_drive_count, as_count_of=TestDrive)",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGRYEZ5Z8AQPZRYPJ6K4"
+        },
+        {
+            "name": "Employee Service Count",
+            "description": "Count the number of services conducted by an employee",
+            "use_case": "Keeps track of employee productivity regarding car maintenance.",
+            "code": "Rule.count(derive=Employee.service_count, as_count_of=Maintenance, where=lambda row: row.employee_id == Employee.id)",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGTEK03P1J26GVH2WMV7"
+        },
+        {
+            "name": "Track Promotions Applied",
+            "description": "Count how many promotions have been applied to a car",
+            "use_case": "Allow for awareness of car promotions and their usage.",
+            "code": "Rule.count(derive=Promotion.applied_count, as_count_of=Sale, where=lambda row: row.car_id == Promotion.car_id)",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGW0WQPA1Z67DVM8K1NP"
+        },
+        {
+            "name": "Inventory Validity",
+            "description": "Ensure that no dealer has more than a fixed limit of cars in inventory",
+            "use_case": "Enforce inventory limits for dealers to manage stock efficiently.",
+            "code": "Rule.constraint(validate=Dealer, as_condition=lambda row: row.inventory_count <= 50, error_msg='Dealer inventory exceeds limit')",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGX6X32GT02RKZH5B727"
+        },
+        {
+            "name": "Employee Limit on Services",
+            "description": "Ensure that employees cannot service more than 10 cars in a day",
+            "use_case": "Control the workload of mechanics and service staff in dealers.",
+            "code": "Rule.constraint(validate=Employee, as_condition=lambda row: row.service_count <= 10, error_msg='Employee has exceeded the daily service limit')",
+            "error": null,
+            "status": "accepted",
+            "entity": null,
+            "id": "01JGE1EGY2QQH9DA0VP34ARHS9"
+        }
+    ],
+    "models": [
+        {
+            "classname": "Brand",
+            "code": "class Brand(Base):  # type: ignore\n    \"\"\"\n    description: Represents a car brand with a unique identifier.\n    \"\"\"\n    __tablename__ = 'brand'\n    _s_collection_name = 'Brand'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    CarList : Mapped[List[\"Car\"]] = relationship(back_populates=\"brand\")"
+        },
+        {
+            "classname": "CarFeature",
+            "code": "class CarFeature(Base):  # type: ignore\n    \"\"\"\n    description: Defines the features that can be associated with different cars.\n    \"\"\"\n    __tablename__ = 'car_feature'\n    _s_collection_name = 'CarFeature'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    feature_name = Column(String)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    CarFeatureAssignmentList : Mapped[List[\"CarFeatureAssignment\"]] = relationship(back_populates=\"feature\")"
+        },
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):  # type: ignore\n    \"\"\"\n    description: Represents a customer with contact details. Tracks the number of test drives requested by the customer.\n    \"\"\"\n    __tablename__ = 'customer'\n    _s_collection_name = 'Customer'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    first_name = Column(String)\n    last_name = Column(String)\n    email = Column(String)\n    test_drive_count = Column(Integer)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    SaleList : Mapped[List[\"Sale\"]] = relationship(back_populates=\"customer\")\n    TestDriveList : Mapped[List[\"TestDrive\"]] = relationship(back_populates=\"customer\")"
+        },
+        {
+            "classname": "Dealer",
+            "code": "class Dealer(Base):  # type: ignore\n    \"\"\"\n    description: Represents a dealership location along with its name. Tracks the total inventory count for the dealer.\n    \"\"\"\n    __tablename__ = 'dealer'\n    _s_collection_name = 'Dealer'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n    location = Column(String)\n    inventory_count = Column(Integer)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    EmployeeList : Mapped[List[\"Employee\"]] = relationship(back_populates=\"dealer\")\n    InventoryList : Mapped[List[\"Inventory\"]] = relationship(back_populates=\"dealer\")"
+        },
+        {
+            "classname": "Car",
+            "code": "class Car(Base):  # type: ignore\n    \"\"\"\n    description: Represents a car in the dealership, including the brand it belongs to and its price. Tracks the number of test drives requested for this car.\n    \"\"\"\n    __tablename__ = 'car'\n    _s_collection_name = 'Car'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    model = Column(String)\n    brand_id = Column(ForeignKey('brand.id'))\n    price = Column(Integer)\n    year_of_manufacture = Column(Integer)\n    test_drive_count = Column(Integer)\n\n    # parent relationships (access parent)\n    brand : Mapped[\"Brand\"] = relationship(back_populates=(\"CarList\"))\n\n    # child relationships (access children)\n    CarFeatureAssignmentList : Mapped[List[\"CarFeatureAssignment\"]] = relationship(back_populates=\"car\")\n    InventoryList : Mapped[List[\"Inventory\"]] = relationship(back_populates=\"car\")\n    MaintenanceList : Mapped[List[\"Maintenance\"]] = relationship(back_populates=\"car\")\n    PromotionList : Mapped[List[\"Promotion\"]] = relationship(back_populates=\"car\")\n    SaleList : Mapped[List[\"Sale\"]] = relationship(back_populates=\"car\")\n    TestDriveList : Mapped[List[\"TestDrive\"]] = relationship(back_populates=\"car\")"
+        },
+        {
+            "classname": "Employee",
+            "code": "class Employee(Base):  # type: ignore\n    \"\"\"\n    description: Contains the details of employees working at various dealerships. Tracks the number of services conducted by an employee.\n    \"\"\"\n    __tablename__ = 'employee'\n    _s_collection_name = 'Employee'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    dealer_id = Column(ForeignKey('dealer.id'))\n    first_name = Column(String)\n    last_name = Column(String)\n    position = Column(String)\n    service_count = Column(Integer)\n\n    # parent relationships (access parent)\n    dealer : Mapped[\"Dealer\"] = relationship(back_populates=(\"EmployeeList\"))\n\n    # child relationships (access children)\n    MaintenanceList : Mapped[List[\"Maintenance\"]] = relationship(back_populates=\"employee\")"
+        },
+        {
+            "classname": "CarFeatureAssignment",
+            "code": "class CarFeatureAssignment(Base):  # type: ignore\n    \"\"\"\n    description: Link table between cars and features to assign features to specific cars.\n    \"\"\"\n    __tablename__ = 'car_feature_assignment'\n    _s_collection_name = 'CarFeatureAssignment'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    car_id = Column(ForeignKey('car.id'))\n    feature_id = Column(ForeignKey('car_feature.id'))\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"CarFeatureAssignmentList\"))\n    feature : Mapped[\"CarFeature\"] = relationship(back_populates=(\"CarFeatureAssignmentList\"))"
+        },
+        {
+            "classname": "Inventory",
+            "code": "class Inventory(Base):  # type: ignore\n    \"\"\"\n    description: Tracks the number of a specific car model available at each dealer.\n    \"\"\"\n    __tablename__ = 'inventory'\n    _s_collection_name = 'Inventory'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    dealer_id = Column(ForeignKey('dealer.id'))\n    car_id = Column(ForeignKey('car.id'))\n    quantity = Column(Integer)\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"InventoryList\"))\n    dealer : Mapped[\"Dealer\"] = relationship(back_populates=(\"InventoryList\"))"
+        },
+        {
+            "classname": "Maintenance",
+            "code": "class Maintenance(Base):  # type: ignore\n    \"\"\"\n    description: Stores information about maintenance and service history of cars. Associates maintenance tasks with employees.\n    \"\"\"\n    __tablename__ = 'maintenance'\n    _s_collection_name = 'Maintenance'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    car_id = Column(ForeignKey('car.id'))\n    employee_id = Column(ForeignKey('employee.id'))\n    last_serviced_date = Column(DateTime)\n    service_details = Column(String)\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"MaintenanceList\"))\n    employee : Mapped[\"Employee\"] = relationship(back_populates=(\"MaintenanceList\"))"
+        },
+        {
+            "classname": "Promotion",
+            "code": "class Promotion(Base):  # type: ignore\n    \"\"\"\n    description: Lists active promotions on specific cars, including discounts. Tracks how many sales have utilized the promotion.\n    \"\"\"\n    __tablename__ = 'promotion'\n    _s_collection_name = 'Promotion'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    car_id = Column(ForeignKey('car.id'))\n    description = Column(String)\n    discount_percentage = Column(Integer)\n    applied_count = Column(Integer)\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"PromotionList\"))"
+        },
+        {
+            "classname": "Sale",
+            "code": "class Sale(Base):  # type: ignore\n    \"\"\"\n    description: Details the sale transactions involving cars and customers.\n    \"\"\"\n    __tablename__ = 'sale'\n    _s_collection_name = 'Sale'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    car_id = Column(ForeignKey('car.id'))\n    customer_id = Column(ForeignKey('customer.id'))\n    sale_date = Column(DateTime)\n    sale_price = Column(Integer)\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"SaleList\"))\n    customer : Mapped[\"Customer\"] = relationship(back_populates=(\"SaleList\"))"
+        },
+        {
+            "classname": "TestDrive",
+            "code": "class TestDrive(Base):  # type: ignore\n    \"\"\"\n    description: Records customer requests and actual test drive events with dates.\n    \"\"\"\n    __tablename__ = 'test_drive'\n    _s_collection_name = 'TestDrive'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    customer_id = Column(ForeignKey('customer.id'))\n    car_id = Column(ForeignKey('car.id'))\n    date = Column(DateTime)\n\n    # parent relationships (access parent)\n    car : Mapped[\"Car\"] = relationship(back_populates=(\"TestDriveList\"))\n    customer : Mapped[\"Customer\"] = relationship(back_populates=(\"TestDriveList\"))"
+        }
+    ]
+}
